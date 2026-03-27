@@ -1,0 +1,30 @@
+# Best Trade Scanner — batch template
+#
+# Run:
+#   python best_trade_cli.py user_input/jobs/your_file.csv
+#   python best_trade_cli.py user_input/jobs/your_file.csv --no-chart
+#
+# Columns:
+#   job_id                   unique identifier
+#   ticker                   Yahoo Finance symbol (e.g. AA, SPY, AAPL)
+#   ticker_file              path to file with one ticker per line (alt to ticker)
+#   start_year               first year to include in scan
+#   end_year                 last year (leave empty = up to today)
+#   exclude_years            semicolon-separated years to skip (e.g. "2008;2020")
+#   entry_months             months to scan for entry dates, e.g. "11;12" = Nov+Dec
+#                            leave empty to scan all 12 months
+#   min_days_in_trade        minimum window length in calendar days (default 5)
+#   max_days_in_trade        maximum window length in calendar days (default 45)
+#   stop_pct                 Max Adverse Excursion % filter — e.g. 9.0 (default 9.0)
+#   min_years                minimum valid year-observations required (default 15)
+#   win_rate_threshold       minimum win rate % (default 75.0)
+#   profit_factor_threshold  minimum profit factor / F/L ratio (default 1.5)
+#   max_consec_losses        max consecutive losing years allowed (default 999 = off)
+#   direction                long | short (default long)
+#   top_n                    number of trades shown in chart (default 20)
+#   save_chart               true | false
+#   output_path              output directory for CSV + PNG
+#   notes                    free text
+#
+job_id,ticker,ticker_file,start_year,end_year,exclude_years,entry_months,min_days_in_trade,max_days_in_trade,stop_pct,min_years,win_rate_threshold,profit_factor_threshold,max_consec_losses,direction,top_n,save_chart,output_path,notes
+example_spy,SPY,,2000,,,11;12,5,45,9.0,15,75.0,1.5,3,long,20,true,output/best_trade/,SPY Nov-Dec seasonal windows

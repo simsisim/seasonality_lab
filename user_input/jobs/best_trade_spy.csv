@@ -1,0 +1,20 @@
+# Best trade scanner — SPY example
+#
+# Run:
+#   python best_trade_cli.py user_input/jobs/best_trade_spy.csv
+#   python best_trade_cli.py user_input/jobs/best_trade_spy.csv --no-chart
+#
+# Output:
+#   output/best_trade/spy_bt_best_trades.csv   ← all qualifying windows, ranked
+#   output/best_trade/spy_bt_top20_chart.png   ← bar chart of top 20
+#
+# entry_months: semicolon-separated month numbers (e.g. "11;12" = Nov+Dec only)
+#               leave empty to scan all months
+# min/max_days_in_trade: window duration range in calendar days
+# stop_pct: Max Adverse Excursion % — filters out windows with large intra-trade drops
+# win_rate_threshold: minimum % of years that must be profitable
+# max_consec_losses: maximum allowed consecutive losing years
+# direction: long | short
+#
+job_id,ticker,ticker_file,start_year,end_year,exclude_years,entry_months,min_days_in_trade,max_days_in_trade,stop_pct,min_years,win_rate_threshold,profit_factor_threshold,max_consec_losses,direction,top_n,save_chart,output_path,notes
+spy_bt,SPY,,2000,,,11;12,5,45,9.0,15,75.0,1.5,3,long,20,true,output/best_trade/,SPY Nov-Dec entry seasonal windows

@@ -1,0 +1,7 @@
+job_id,ticker,data_source,interval,download_start_date,download_end_date,data_cache,chart_type,start_year,end_year,y_axis_metric,output_format,output_path,notes
+spy_default,SPY,yahoo,1d,max,latest,auto,Monthly (Jan-Dec),2000,2026,Average Return,png,output/data_loading/,Default: all history from Yahoo Finance
+qqq_specific_range,QQQ,yahoo,1d,2015-01-01,2025-12-31,auto,Monthly (Jan-Dec),2015,2025,Win Rate,png,output/data_loading/,Specific download date range
+iwm_weekly,IWM,yahoo,1wk,2010-01-01,latest,auto,Monthly (Jan-Dec),2010,2026,Cumulative Return,png,output/data_loading/,Weekly data instead of daily
+nvda_monthly,NVDA,yahoo,1mo,2015-01-01,latest,auto,Monthly (Jan-Dec),2015,2026,Annualized (CAGR),html,output/data_loading/,Monthly data for long-term analysis
+gspc_force_cache,^GSPC,yahoo,1d,2020-01-01,2024-12-31,force,Monthly (Jan-Dec),2020,2024,Average Return,png,output/data_loading/,Force re-download even if cached
+btc_no_cache,BTC-USD,yahoo,1d,2017-01-01,latest,no_cache,Monthly (Jan-Dec),2017,2026,Average Return,png,output/data_loading/,Disable cache for volatile assets

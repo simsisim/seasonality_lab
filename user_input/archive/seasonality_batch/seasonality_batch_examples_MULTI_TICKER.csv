@@ -1,0 +1,22 @@
+job_id,ticker,chart_type,start_year,end_year,aggregation,data_type,alignment,output_type,logic_calc,y_axis_metric,output_format,output_path,notes
+indices_spy_monthly,SPY,Monthly (Jan-Dec),2000,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/indices/,S&P 500 monthly patterns
+indices_qqq_monthly,QQQ,Monthly (Jan-Dec),2000,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/indices/,Nasdaq 100 monthly patterns
+indices_dia_monthly,DIA,Monthly (Jan-Dec),2000,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/indices/,Dow Jones monthly patterns
+indices_iwm_monthly,IWM,Monthly (Jan-Dec),2000,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/indices/,Russell 2000 monthly patterns
+sectors_xlk_monthly,XLK,Monthly (Jan-Dec),2000,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/sectors/,Technology sector (XLK) monthly
+sectors_xlf_monthly,XLF,Monthly (Jan-Dec),2000,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/sectors/,Financials sector (XLF) monthly
+sectors_xlv_monthly,XLV,Monthly (Jan-Dec),2000,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/sectors/,Healthcare sector (XLV) monthly
+sectors_xle_monthly,XLE,Monthly (Jan-Dec),2000,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/sectors/,Energy sector (XLE) monthly
+sectors_xlp_monthly,XLP,Monthly (Jan-Dec),2000,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/sectors/,Consumer Staples sector (XLP) monthly
+sectors_xly_monthly,XLY,Monthly (Jan-Dec),2000,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/sectors/,Consumer Discretionary sector (XLY) monthly
+commodities_gld_monthly,GLD,Monthly (Jan-Dec),2005,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/commodities/,Gold (GLD) monthly patterns
+commodities_slv_monthly,SLV,Monthly (Jan-Dec),2006,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/commodities/,Silver (SLV) monthly patterns
+commodities_uso_monthly,USO,Monthly (Jan-Dec),2006,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/commodities/,Oil (USO) monthly patterns
+commodities_dba_monthly,DBA,Monthly (Jan-Dec),2007,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/commodities/,Agriculture (DBA) monthly patterns
+bonds_tlt_monthly,TLT,Monthly (Jan-Dec),2003,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/bonds/,20+ Year Treasury (TLT) monthly
+bonds_ief_monthly,IEF,Monthly (Jan-Dec),2003,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/bonds/,7-10 Year Treasury (IEF) monthly
+bonds_shy_monthly,SHY,Monthly (Jan-Dec),2003,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/bonds/,1-3 Year Treasury (SHY) monthly
+bonds_lqd_monthly,LQD,Monthly (Jan-Dec),2003,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/bonds/,Corporate Bonds (LQD) monthly
+bonds_hyg_monthly,HYG,Monthly (Jan-Dec),2007,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,png,output/multi_ticker/bonds/,High Yield Bonds (HYG) monthly
+crypto_btc_monthly,BTC-USD,Monthly (Jan-Dec),2015,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,html,output/multi_ticker/crypto/,Bitcoin monthly seasonality
+crypto_eth_monthly,ETH-USD,Monthly (Jan-Dec),2017,2026,Simple Average,Returns,None,Bar,open_close_month,Average Return,html,output/multi_ticker/crypto/,Ethereum monthly seasonality

@@ -1,0 +1,9 @@
+# Best trade scanner — all Nasdaq-100 tickers
+#
+# Run:
+#   python best_trade_cli.py user_input/jobs/best_trade_ndx100.csv --workers 4
+#
+# Output per ticker: {ticker}_best_trades.csv + {ticker}_top20_chart.png
+#
+job_id,ticker,ticker_file,start_year,end_year,exclude_years,min_years,win_rate_threshold,profit_factor_threshold,max_dd_threshold,top_n,save_chart,output_path,notes
+ndx_bt,,tickers/nasdaq100_tickers.csv,2000,,,15,0.70,1.5,0.20,20,true,output/best_trade_ndx100/,Best trades for all NDX100 tickers

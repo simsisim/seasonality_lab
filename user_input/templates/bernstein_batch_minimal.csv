@@ -1,0 +1,9 @@
+# Bernstein Composite Weekly Chart — batch template
+# chart_type = "Bernstein Composite"  (short alias: "composite")
+#
+job_id,ticker,ticker_file,chart_type,start_year,end_year,win_rate_arrow_threshold,output_path,notes
+spy_composite,SPY,,Bernstein Composite,1993,,,output/composite/,SPY full history
+spy_composite_modern,SPY,,Bernstein Composite,2000,,65,output/composite/,SPY from 2000
+djia_composite,^DJI,,Bernstein Composite,1970,,65,output/composite/,DJIA from 1970
+qqq_composite,QQQ,,Bernstein Composite,2000,,65,output/composite/,Nasdaq 100 ETF
+aapl_composite,AAPL,,Bernstein Composite,1990,,65,output/composite/,Apple Inc

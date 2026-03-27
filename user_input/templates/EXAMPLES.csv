@@ -1,0 +1,24 @@
+# EXAMPLES — one row per chart type showing typical settings.
+# Copy rows you want into a new file in user_input/jobs/.
+#
+# chart_type short aliases also accepted:
+#   calendar_day, trading_day, weekly_payroll, weekday_effect,
+#   monthly, quarterly, annual_window, grouping,
+#   seasonal_run, best_worst, composite (=Bernstein), bernstein
+#
+job_id,ticker,ticker_file,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,win_rate_arrow_threshold,output_path,notes
+ex_calendar_day_ab,SPY,,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,,output/examples/,Calendar day avg+bands
+ex_calendar_day_wr,SPY,,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Win Rate,false,false,1,,output/examples/,Calendar day win rate
+ex_calendar_day_cagr,SPY,,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Annualized (CAGR),false,false,1,,output/examples/,Calendar day CAGR
+ex_trading_day,SPY,,Trading Day (1-22),2000,,Simple Average,Returns,None,average_daily,Average Return,true,false,1,,output/examples/,Trading day of month
+ex_weekly_payroll,SPY,,Weekly Payroll (W1-5),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,false,false,1,,output/examples/,Payroll week effect
+ex_weekday,SPY,,Weekday Effect,2000,,Simple Average,Returns,Weekday-Week,average_daily,Average Return,false,false,1,,output/examples/,Mon-Fri patterns
+ex_monthly_avg,SPY,,Monthly (Jan-Dec),2000,,Simple Average,Returns,None,open_close_month,Average Return,true,false,1,,output/examples/,Monthly avg+bands
+ex_monthly_wr,SPY,,Monthly (Jan-Dec),2000,,Simple Average,Returns,None,open_close_month,Win Rate,false,false,1,,output/examples/,Monthly win rate
+ex_monthly_cagr,SPY,,Monthly (Jan-Dec),2000,,Simple Average,Returns,None,open_close_month,Annualized (CAGR),false,false,1,,output/examples/,Monthly CAGR
+ex_quarterly_avg,SPY,,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Average Return,true,false,1,,output/examples/,Quarterly halves avg+bands
+ex_quarterly_wr,SPY,,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Win Rate,false,false,1,,output/examples/,Quarterly win rate
+ex_grouping,SPY,,Grouping of Days,2000,,Simple Average,Returns,None,average_daily,Annualized (CAGR),false,false,1,,output/examples/,1-10 / 11-20 / 21-31 grouping
+ex_seasonal_run,SPY,,Seasonal Run,2000,,Simple Average,Returns,None,average_daily,Win Rate,false,true,1,,output/examples/,Consecutive reliable periods
+ex_bernstein_composite,SPY,,Bernstein Composite,2000,,,,,,,,,,65,output/examples/,Bernstein weekly 0-100 chart
+ex_bernstein_djia,^DJI,,Bernstein Composite,1970,,,,,,,,,,65,output/examples/,DJIA Bernstein since 1970

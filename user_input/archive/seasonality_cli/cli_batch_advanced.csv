@@ -1,0 +1,6 @@
+job_id,ticker,data_source,interval,start_year,end_year,chart_type,exclude_years,filter_regime,y_axis_metric,aggregation,output_format,output_path,notes
+spy_bull,SPY,yahoo,1d,2000,2026,Monthly (Jan-Dec),,Bull Markets,Average Return,Simple Average,png,output/cli_advanced/,SPY monthly in bull markets only
+spy_no_crisis,SPY,yahoo,1d,2000,2026,Monthly (Jan-Dec),2008;2009;2020,,Average Return,Simple Average,png,output/cli_advanced/,SPY monthly excluding crisis years
+spy_all_markets,SPY,yahoo,1d,2000,2026,Monthly (Jan-Dec),,,Average Return,Simple Average,png,output/cli_advanced/,SPY monthly all conditions
+qqq_recent,QQQ,yahoo,1d,2020,2026,Quarterly Halves,,,Annualized (CAGR),Simple Average,both,output/cli_advanced/,QQQ quarterly recent years
+dia_calendar,DIA,yahoo,1d,2010,2026,Calendar Day (1-31),,,Win Rate,Simple Average,png,output/cli_advanced/,Dow Jones calendar day win rate

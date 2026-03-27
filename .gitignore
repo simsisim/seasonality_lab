@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Generated output (charts, stats CSVs)
+output/
+
+# Downloaded price data cache
+data/cache/
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# LibreOffice lock files
+.~lock.*
+
+# Temp / editor artifacts
+Empty File
+*~
+.DS_Store

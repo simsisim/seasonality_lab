@@ -1,0 +1,23 @@
+# Recreate output/old — NVDA charts
+# These 10 jobs reproduce the charts previously in output/old/nvda_*/
+#
+# Naming convention in output filenames:
+#   ab   = Average Return + min/max Bands     (show_bands=true)
+#   ar   = Average Return + Reliability runs  (show_reliability=true)
+#   cagr = Annualized (CAGR) y-axis metric
+#   wr   = Win Rate y-axis metric
+#
+# Run with:
+#   python bernstein_cli.py user_input/recreate_nvda_old.csv
+#
+job_id,ticker,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,output_path,notes
+nvda_calendar_day_ab,NVDA,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,output/old_recreated/,NVDA calendar day — avg + bands
+nvda_calendar_day_ar,NVDA,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,false,true,1,output/old_recreated/,NVDA calendar day — avg + reliability
+nvda_calendar_day_cagr,NVDA,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Annualized (CAGR),false,false,1,output/old_recreated/,NVDA calendar day — CAGR
+nvda_grouping_of_days_ab,NVDA,Grouping of Days,2000,,Simple Average,Returns,None,average_daily,Average Return,true,false,1,output/old_recreated/,NVDA grouping of days — avg + bands
+nvda_grouping_of_days_ar,NVDA,Grouping of Days,2000,,Simple Average,Returns,None,average_daily,Average Return,false,true,1,output/old_recreated/,NVDA grouping of days — reliability
+nvda_grouping_of_days_cagr,NVDA,Grouping of Days,2000,,Simple Average,Returns,None,average_daily,Annualized (CAGR),false,false,1,output/old_recreated/,NVDA grouping of days — CAGR
+nvda_monthly_wr,NVDA,Monthly (Jan-Dec),2000,,Simple Average,Returns,None,open_close_month,Win Rate,false,false,1,output/old_recreated/,NVDA monthly — win rate
+nvda_quarterly_ab,NVDA,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Average Return,true,false,1,output/old_recreated/,NVDA quarterly — avg + bands
+nvda_quarterly_ar,NVDA,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Average Return,false,true,1,output/old_recreated/,NVDA quarterly — reliability
+nvda_quarterly_cagr,NVDA,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Annualized (CAGR),false,false,1,output/old_recreated/,NVDA quarterly — CAGR

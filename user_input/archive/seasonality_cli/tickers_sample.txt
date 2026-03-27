@@ -1,0 +1,51 @@
+# Tickers file for generate_batch.py
+# ---------------------------------
+# One ticker per line. Blank lines and # comments are ignored.
+# Inline comments are also supported (everything after # is stripped).
+# Tickers are automatically uppercased.
+#
+# Usage:
+#   python generate_batch.py tickers_sample.txt cli_model_win_rate.csv
+#
+# Yahoo Finance symbol notes:
+#   Indices  : ^GSPC, ^DJI, ^IXIC, ^RUT, ^VIX
+#   ETFs     : SPY, QQQ, IWM, DIA, GLD, TLT
+#   Forex    : EURUSD=X, GBPUSD=X
+#   Futures  : ES=F, NQ=F, GC=F
+
+# --- US Large Cap ETFs ---
+SPY     # S&P 500
+QQQ     # Nasdaq 100
+DIA     # Dow Jones
+IWM     # Russell 2000
+
+# --- Sector ETFs ---
+XLK     # Technology
+XLF     # Financials
+XLE     # Energy
+XLV     # Health Care
+XLI     # Industrials
+XLY     # Consumer Discretionary
+XLP     # Consumer Staples
+XLU     # Utilities
+XLRE    # Real Estate
+XLB     # Materials
+XLC     # Communication Services
+
+# --- Bonds ---
+TLT     # 20+ Year Treasury
+IEF     # 7-10 Year Treasury
+SHY     # 1-3 Year Treasury
+HYG     # High Yield Corporate
+
+# --- Commodities ---
+GLD     # Gold
+SLV     # Silver
+USO     # Oil
+UNG     # Natural Gas
+
+# --- Indices ---
+^GSPC   # S&P 500 Index
+^DJI    # Dow Jones Index
+^IXIC   # Nasdaq Composite
+^RUT    # Russell 2000 Index
