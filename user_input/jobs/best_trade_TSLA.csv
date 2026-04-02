@@ -1,0 +1,11 @@
+# Best trade scanner — Alcoa (AA),,,,,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,,,,,
+# Run:,,,,,,,,,,,,,,,,,,,
+#   python best_trade_cli.py user_input/jobs/best_trade_aa.csv,,,,,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,,,,,
+# Output:,,,,,,,,,,,,,,,,,,,
+#   output/best_trade/tsla_bt_best_trades.csv,,,,,,,,,,,,,,,,,,,
+#   output/best_trade/TSLA_bt_top20_chart.png,,,,,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,,,,,
+job_id,ticker,ticker_file,start_year,end_year,exclude_years,entry_months,min_days_in_trade,max_days_in_trade,stop_pct,min_years,win_rate_threshold,profit_factor_threshold,max_consec_losses,direction,top_n,save_chart,output_path,notes
+tsla_bt,TSLA,,2000,,,5,5,70,9,15,75,1.5,3,long,20,true,output/best_trade/,TSLA May seasonal windows

@@ -1,7 +1,7 @@
 # AA (Alcoa) — all chart types: legacy variants + Bernstein composite,,,,,,,,,,,,,,,,
 #,,,,,,,,,,,,,,,,
 # Run:,,,,,,,,,,,,,,,,
-#   python bernstein_cli.py user_input/jobs/aa_all_charts.csv,,,,,,,,,,,,,,,,
+#   python seasonality_cli.py user_input/jobs/aa_all_charts.csv,,,,,,,,,,,,,,,,
 #,,,,,,,,,,,,,,,,
 job_id,ticker,ticker_file,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,win_rate_arrow_threshold,output_path,notes
 aa_calendar_day_ab,AA,,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,,output/aa/,Calendar day avg+bands

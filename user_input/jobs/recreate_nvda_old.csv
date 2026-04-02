@@ -8,7 +8,7 @@
 #   wr   = Win Rate y-axis metric
 #
 # Run with:
-#   python bernstein_cli.py user_input/recreate_nvda_old.csv
+#   python seasonality_cli.py user_input/recreate_nvda_old.csv
 #
 job_id,ticker,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,output_path,notes
 nvda_calendar_day_ab,NVDA,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,output/old_recreated/,NVDA calendar day — avg + bands

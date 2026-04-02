@@ -9,13 +9,13 @@ No dashboard, no presidential/decennial cycles. Pure CSV-driven CLI.
 
 ```bash
 # Generate Bernstein composite weekly charts
-python bernstein_cli.py templates/bernstein_batch_minimal.csv
+python seasonality_cli.py templates/bernstein_batch_minimal.csv
 
 # Run best trade scanner for single ticker
-python bernstein_cli.py templates/best_trade_batch.csv
+python seasonality_cli.py templates/best_trade_batch.csv
 
 # Multi-ticker screening with parallel workers
-python bernstein_cli.py templates/best_trade_nasdaq100.csv --workers 4
+python seasonality_cli.py templates/best_trade_nasdaq100.csv --workers 4
 ```
 
 ---
@@ -25,7 +25,7 @@ python bernstein_cli.py templates/best_trade_nasdaq100.csv --workers 4
 ```
 seasonality_Bernstein/
 ├── PLAN.md                           # This file
-├── bernstein_cli.py                  # Entry point (argparse + batch runner)
+├── seasonality_cli.py                  # Entry point (argparse + batch runner)
 ├── requirements.txt
 ├── src/
 │   ├── data/

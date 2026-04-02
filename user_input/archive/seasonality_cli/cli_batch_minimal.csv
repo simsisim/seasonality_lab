@@ -1,4 +1,0 @@
-job_id,ticker,data_source,interval,chart_type,output_path,notes
-spy_monthly,SPY,yahoo,1d,Monthly (Jan-Dec),output/cli_minimal/,S&P 500 monthly seasonality
-qqq_calendar,QQQ,yahoo,1d,Calendar Day (1-31),output/cli_minimal/,Nasdaq calendar day patterns
-iwm_trading,IWM,yahoo,1d,Trading Day (1-22),output/cli_minimal/,Russell 2000 trading day patterns

@@ -1,2 +1,9 @@
-NVDA
-TSLA
+# Format: TICKER[,source],
+# source values: yf (Yahoo Finance only), stooq (auto-download), local (hist_data/ only)
+# Leave source blank for auto: checks hist_data/ first, then Yahoo Finance,
+QQQ,,
+SPY,,
+IWM,,
+^SPX,,
+^IXIC,,
+^DJI,local,

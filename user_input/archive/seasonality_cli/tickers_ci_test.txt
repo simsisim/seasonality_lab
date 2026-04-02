@@ -1,9 +1,0 @@
-# CI test tickers — small set to keep run time short and avoid rate limiting
-# Used by the GitHub Actions workflow as the default tickers file.
-# Edit this file to change what gets analysed in automated runs.
-
-SPY     # S&P 500
-QQQ     # Nasdaq 100
-IWM     # Russell 2000
-GLD     # Gold
-TLT     # 20+ Year Treasury

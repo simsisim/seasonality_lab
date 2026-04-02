@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-bernstein_cli.py — Entry point for the Bernstein seasonality program.
+seasonality_cli.py — Entry point for the seasonality analysis program.
 
 Usage:
-    python bernstein_cli.py <batch_csv> [options]
+    python seasonality_cli.py <batch_csv> [options]
 
 Examples:
-    python bernstein_cli.py templates/bernstein_batch_minimal.csv
-    python bernstein_cli.py templates/best_trade_batch.csv --output output/scan/
-    python bernstein_cli.py templates/best_trade_nasdaq100.csv --workers 4
+    python seasonality_cli.py templates/bernstein_batch_minimal.csv
+    python seasonality_cli.py templates/best_trade_batch.csv --output output/scan/
+    python seasonality_cli.py templates/best_trade_nasdaq100.csv --workers 4
 """
 
 import argparse

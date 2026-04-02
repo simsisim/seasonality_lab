@@ -1,4 +1,0 @@
-job_id,ticker,chart_type,output_format,output_path,notes
-my_job_001,SPY,Monthly (Jan-Dec),png,output/batch/,Example: S&P 500 monthly seasonality with all defaults
-my_job_002,QQQ,Calendar Day (1-31),png,output/batch/,Example: Nasdaq calendar day patterns with all defaults
-my_job_003,IWM,Trading Day (1-22),html,output/batch/,Example: Russell 2000 trading day patterns (HTML output)

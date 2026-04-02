@@ -42,8 +42,17 @@ class BernsteinEngine:
     def _load(self, cfg: BernsteinJobConfig) -> pd.DataFrame:
         from ..data.data_loader import DataLoader
         from .stamper import stamp_data
+        from pathlib import Path
 
-        loader = DataLoader(cache_dir=self._cache_dir)
+        # Resolve hist_data path relative to project root (two levels up from src/core/)
+        _here = Path(__file__).resolve().parent          # src/core/
+        _project_root = _here.parent.parent              # project root
+        _hist_data = _project_root / "user_input" / "tickers" / "hist_data"
+
+        loader = DataLoader(
+            cache_dir=self._cache_dir,
+            hist_data_path=str(_hist_data) if _hist_data.exists() else None,
+        )
 
         start_dt = date(cfg.start_year, 1, 1) if cfg.start_year else None
         end_dt   = date(cfg.end_year,  12, 31) if cfg.end_year  else None

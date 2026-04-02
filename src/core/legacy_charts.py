@@ -48,16 +48,35 @@ MONTH_ABBR_1 = ['','Jan','Feb','Mar','Apr','May','Jun',
                 'Jul','Aug','Sep','Oct','Nov','Dec']   # 1-indexed
 
 # ── Quarterly Halves date ranges ──────────────────────────────────────────────
-QUARTERLY_HALVES = [
-    ('Q1 (1st)',  1,  1,  2, 15),
-    ('Q1 (2nd)',  2, 16,  3, 31),
-    ('Q2 (1st)',  4,  1,  5, 15),
-    ('Q2 (2nd)',  5, 16,  6, 30),
-    ('Q3 (1st)',  7,  1,  8, 15),
-    ('Q3 (2nd)',  8, 16,  9, 30),
-    ('Q4 (1st)', 10,  1, 11, 15),
-    ('Q4 (2nd)', 11, 16, 12, 31),
+# Default split day (day-of-month of the middle month of each quarter).
+# Override per-job via config.quarter_split_day.
+_QUARTER_SPLIT_DAY_DEFAULT = 15
+
+# Quarter definitions: (label_prefix, q_start_month, q_end_month, q_end_day)
+_QUARTER_DEFS = [
+    ('Q1',  1,  3, 31),
+    ('Q2',  4,  6, 30),
+    ('Q3',  7,  9, 30),
+    ('Q4', 10, 12, 31),
 ]
+
+
+def _build_quarterly_halves(split_day: int) -> list:
+    """
+    Build the 8 quarterly-half period definitions for a given split day.
+
+    Each quarter is split at `split_day` of its middle month:
+      1st half: month1/1  → month2/split_day
+      2nd half: month2/(split_day+1) → month3/end_day
+
+    Returns list of (label, start_month, start_day, end_month, end_day).
+    """
+    halves = []
+    for prefix, qm1, qm3, qm3_end in _QUARTER_DEFS:
+        qm2 = qm1 + 1          # middle month of the quarter
+        halves.append((f'{prefix} (1st)', qm1,  1,   qm2, split_day))
+        halves.append((f'{prefix} (2nd)', qm2,  split_day + 1, qm3, qm3_end))
+    return halves
 
 
 # =============================================================================
@@ -288,14 +307,19 @@ def _select_y_axis(stats_list: List[Dict], y_axis_metric: str,
 # MATPLOTLIB RENDERING HELPERS
 # =============================================================================
 
-def _build_title(chart_name: str, config: BernsteinJobConfig) -> Tuple[str, str]:
+def _build_title(chart_name: str, config: BernsteinJobConfig, n_years: int = 0) -> Tuple[str, str]:
     """Returns (main_title, subtitle). subtitle is '' when show_reliability=False."""
     yr  = f"{config.start_year or ''}–{config.end_year or 'present'}"
     main = f"Average Performance by {chart_name} | {config.ticker}, {yr}"
+    hist_part = f"hist_yr = {n_years}" if n_years else ""
     sub  = ""
     if config.show_reliability:
         sub = ("★★★ = Strong (WR≥65%, n≥30)  |  ★★ = Reliable (WR≥59%, n≥20)  |"
                "  ★ = Limited  |  Faded bars = low sample size")
+        if hist_part:
+            sub += f"  |  {hist_part}"
+    elif hist_part:
+        sub = hist_part
     return main, sub
 
 
@@ -404,6 +428,7 @@ def _draw_bar_chart(
     config:      BernsteinJobConfig,
     chart_name:  str,
     xaxis_title: str,
+    n_years:     int = 0,
 ) -> mpl_figure.Figure:
     """
     Core bar chart renderer for all legacy chart types.
@@ -476,7 +501,7 @@ def _draw_bar_chart(
         )
 
     # ── Layout, style, titles ─────────────────────────────────────────────────
-    main_title, subtitle = _build_title(chart_name, config)
+    main_title, subtitle = _build_title(chart_name, config, n_years)
     _apply_layout_mpl(fig, ax, main_title, subtitle, xaxis_title, yaxis_title)
 
     return fig
@@ -577,13 +602,16 @@ def _stats_monthly_avg_daily(df: pd.DataFrame, config: BernsteinJobConfig
 
 def _stats_quarterly(df: pd.DataFrame, config: BernsteinJobConfig
                      ) -> Tuple[List[Dict], List, List[float]]:
+    split_day = config.quarter_split_day or _QUARTER_SPLIT_DAY_DEFAULT
+    quarterly_halves = _build_quarterly_halves(split_day)
+
     stats_list, std_bands, x_labels = [], [], []
 
     if config.logic_calc == 'open_close_period':
-        period_df = calculate_open_close_date_ranges(df, QUARTERLY_HALVES)
-        for label, sm, sd, em, ed in QUARTERLY_HALVES:
+        period_df = calculate_open_close_date_ranges(df, quarterly_halves)
+        for label, sm, sd, em, ed in quarterly_halves:
             date_range = f"{MONTH_ABBR_1[sm]} {sd} - {MONTH_ABBR_1[em]} {ed}"
-            x_labels.append(f"{label}\n{date_range}")    # \n for matplotlib multiline
+            x_labels.append(f"{label}\n{date_range}")
             if len(period_df) > 0 and 'period_label' in period_df.columns:
                 pdata = period_df[period_df['period_label'] == label]
                 if len(pdata) > 0:
@@ -600,7 +628,7 @@ def _stats_quarterly(df: pd.DataFrame, config: BernsteinJobConfig
             stats_list.append(stats)
     else:
         df = _daily_returns(df)
-        for label, sm, sd, em, ed in QUARTERLY_HALVES:
+        for label, sm, sd, em, ed in quarterly_halves:
             date_range = f"{MONTH_ABBR_1[sm]} {sd} - {MONTH_ABBR_1[em]} {ed}"
             x_labels.append(f"{label}\n{date_range}")
             mask = (
@@ -620,14 +648,31 @@ def _stats_quarterly(df: pd.DataFrame, config: BernsteinJobConfig
     return stats_list, x_labels, std_bands
 
 
+_DAY_GROUPS_DEFAULT = '1-6,7-12,13-18,19-25,26-31'
+
+
+def _parse_day_groups(spec: str) -> List[Tuple[str, range]]:
+    """
+    Parse a day_groups spec string into (label, range) pairs.
+    Format: "1-6,7-12,13-18,19-25,26-31"
+    """
+    groups = []
+    for i, part in enumerate(spec.split(','), start=1):
+        part = part.strip()
+        if '-' not in part:
+            raise ValueError(f"Invalid day_groups segment '{part}': expected 'start-end'")
+        start_s, end_s = part.split('-', 1)
+        start, end = int(start_s.strip()), int(end_s.strip())
+        groups.append((f'G{i}: {start}-{end}', range(start, end + 1)))
+    return groups
+
+
 def _stats_grouping(df: pd.DataFrame, config: BernsteinJobConfig
                     ) -> Tuple[List[Dict], List, List[float]]:
     df = _daily_returns(df)
-    groups = [
-        ('G1: 1-10',  range(1, 11)),
-        ('G2: 11-20', range(11, 21)),
-        ('G3: 21-31', range(21, 32)),
-    ]
+    spec = config.day_groups or _DAY_GROUPS_DEFAULT
+    groups = _parse_day_groups(spec)
+
     stats_list, std_bands, x_labels = [], [], []
     for label, days in groups:
         x_labels.append(label)
@@ -677,6 +722,8 @@ def generate_legacy_chart(
 
     stats_list, x_labels, std_bands = stats_fn(df, config)
 
+    n_years = df['year'].nunique() if 'year' in df.columns else 0
+
     fig = _draw_bar_chart(
         x_values    = x_labels,
         stats_list  = stats_list,
@@ -684,6 +731,7 @@ def generate_legacy_chart(
         config      = config,
         chart_name  = chart_name,
         xaxis_title = xaxis_title,
+        n_years     = n_years,
     )
 
     # Build export DataFrame

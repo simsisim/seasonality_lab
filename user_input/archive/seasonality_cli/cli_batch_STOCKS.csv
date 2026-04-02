@@ -1,3 +1,0 @@
-job_id,ticker,data_source,interval,start_year,end_year,chart_type,exclude_years,filter_regime,y_axis_metric,aggregation,output_format,output_path,notes
-NVDA,NVDA,yahoo,1d,2010,2026,Calendar Day (1-31),,,Win Rate,Simple Average,png,output/cli_advanced/,NVDA calendar day win rate
-TSLA,TSLA,yahoo,1d,2010,2026,Calendar Day (1-31),,,Win Rate,Simple Average,png,output/cli_advanced/,TSLA calendar day win rate

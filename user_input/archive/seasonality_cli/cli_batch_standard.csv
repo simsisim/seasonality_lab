@@ -1,6 +1,0 @@
-job_id,ticker,data_source,interval,download_start_date,start_year,end_year,chart_type,y_axis_metric,output_format,output_path,notes
-spy_monthly_avg,SPY,yahoo,1d,max,2000,2026,Monthly (Jan-Dec),Average Return,png,output/cli_standard/,SPY monthly with average return
-spy_monthly_wr,SPY,yahoo,1d,max,2000,2026,Monthly (Jan-Dec),Win Rate,png,output/cli_standard/,SPY monthly with win rate
-spy_monthly_cagr,SPY,yahoo,1d,max,2000,2026,Monthly (Jan-Dec),Annualized (CAGR),png,output/cli_standard/,SPY monthly with CAGR
-qqq_calendar_2020,QQQ,yahoo,1d,max,2020,2026,Calendar Day (1-31),Average Return,html,output/cli_standard/,QQQ calendar day since 2020
-iwm_quarterly,IWM,yahoo,1d,max,2015,2026,Quarterly Halves,Annualized (CAGR),both,output/cli_standard/,IWM quarterly analysis

@@ -2,4 +2,4 @@
 # Delete columns you don't need (all optional except job_id, ticker/ticker_file, chart_type, output_path).
 # Lines starting with # are ignored.
 #
-job_id,ticker,ticker_file,chart_type,start_year,end_year,exclude_years,data_source,interval,aggregation,data_type,normalization,detrend_enabled,detrend_method,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,win_rate_arrow_threshold,output_path,notes
+job_id,ticker,ticker_file,chart_type,start_year,end_year,exclude_years,data_source,interval,aggregation,data_type,normalization,detrend_enabled,detrend_method,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,day_groups,quarter_split_day,win_rate_arrow_threshold,output_path,notes

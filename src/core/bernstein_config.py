@@ -155,6 +155,12 @@ class BernsteinJobConfig:
     # ── Bernstein Composite options (chart_type = "Bernstein Composite") ───────
     win_rate_arrow_threshold: float = 65.0   # weeks to mark with ↑ arrow
 
+    # ── Grouping of Days options ───────────────────────────────────────────────
+    day_groups: Optional[str] = None    # e.g. "1-6,7-12,13-18,19-25,26-31"
+
+    # ── Quarterly Halves options ───────────────────────────────────────────────
+    quarter_split_day: Optional[int] = None  # day-of-month to split each quarter (default 15)
+
     # ── Best Trade scanner options (chart_type = "Best Trade") ────────────────
     min_years: int = 15
     win_rate_threshold: float = 0.70
@@ -217,6 +223,8 @@ def _parse_row(row: dict) -> BernsteinJobConfig:
         show_bands       = _to_bool(row.get("show_bands", "false")),
         show_reliability = _to_bool(row.get("show_reliability", "false")),
         smoothing_period = int(_parse_float(row.get("smoothing_period", ""), 1)),
+        day_groups                = row.get("day_groups", "").strip() or None,
+        quarter_split_day         = _parse_int(row.get("quarter_split_day", "")),
         win_rate_arrow_threshold  = _parse_float(row.get("win_rate_arrow_threshold", ""), 65.0),
         min_years                 = int(_parse_float(row.get("min_years", ""), 15)),
         win_rate_threshold        = _parse_float(row.get("win_rate_threshold", ""), 0.70),
@@ -239,21 +247,30 @@ def _expand_ticker_file(cfg: BernsteinJobConfig, base_dir: Path) -> list[Bernste
     if not ticker_path.exists():
         raise FileNotFoundError(f"ticker_file not found: {ticker_path}")
 
-    tickers = []
+    # Parse (ticker, optional_source) pairs from the ticker file.
+    # Format: one entry per line, optionally "TICKER,source"
+    # Valid sources: yf, stooq, local  (blank = auto)
+    ticker_entries: list[tuple[str, str]] = []
     for line in ticker_path.read_text().splitlines():
         line = line.strip()
-        # Skip blank lines, comments, and common header words
-        if not line or line.startswith("#") or line.lower() == "ticker":
+        if not line or line.startswith("#") or line.lower() in ("ticker", "ticker,source"):
             continue
-        tickers.append(line.upper())
+        parts = line.rstrip(",").split(",", 1)
+        ticker = parts[0].strip().upper()
+        source = parts[1].strip().lower() if len(parts) > 1 else ""
+        if ticker:
+            ticker_entries.append((ticker, source))
 
+    import copy
     configs = []
-    for ticker in tickers:
-        import copy
+    for ticker, source in ticker_entries:
         c = copy.copy(cfg)
         c.ticker = ticker
         c.ticker_file = ""
         c.job_id = f"{cfg.job_id}_{ticker}" if cfg.job_id else ticker
+        # Column 2 source overrides the job-level data_source only when specified
+        if source:
+            c.data_source = source
         configs.append(c)
 
     return configs

@@ -1,4 +1,4 @@
-# Seasonality Bernstein
+# Seasonality Lab
 
 Two independent programs driven entirely by CSV input files.
 
@@ -8,7 +8,7 @@ Two independent programs driven entirely by CSV input files.
 
 | | Phase 1 | Phase 2 |
 |---|---|---|
-| **Script** | `bernstein_cli.py` | `best_trade_cli.py` |
+| **Script** | `seasonality_cli.py` | `best_trade_cli.py` |
 | **Purpose** | Generate seasonal charts (PNG) | Find best seasonal trade windows |
 | **Output** | PNG images | Ranked CSV of trade windows |
 | **Run independently** | Yes | Yes |
@@ -20,8 +20,8 @@ They share nothing at runtime. You run only what you need.
 ## Phase 1 — Chart Generation
 
 ```bash
-python bernstein_cli.py user_input/jobs/recreate_nvda_old.csv
-python bernstein_cli.py user_input/jobs/ndx100_standard_charts.csv --workers 4
+python seasonality_cli.py user_input/jobs/recreate_nvda_old.csv
+python seasonality_cli.py user_input/jobs/ndx100_standard_charts.csv --workers 4
 ```
 
 ### Chart types
@@ -33,12 +33,12 @@ python bernstein_cli.py user_input/jobs/ndx100_standard_charts.csv --workers 4
 | `Weekly Payroll (W1-5)` | `weekly_payroll` | Payroll week effect |
 | `Weekday Effect` | `weekday_effect` | Mon–Fri patterns |
 | `Monthly (Jan-Dec)` | `monthly` | Calendar month seasonality |
-| `Quarterly Halves` | `quarterly` | 8 half-quarters |
+| `Quarterly Halves` | `quarterly` | Each quarter split into 2 halves (split day configurable) |
 | `Annual Window` | `annual_window` | Custom date window (e.g. Oct15–Dec31) |
-| `Grouping of Days` | `grouping` | Custom day-range groups |
+| `Grouping of Days` | `grouping` | Month split into day-range groups (fully configurable) |
 | `Seasonal Run` | `seasonal_run` | Consecutive reliable periods |
 | `Best/Worst Periods` | `best_worst` | Top N best/worst periods |
-| `Bernstein Composite` | `composite` | **New** — weekly 0–100 normalized line, green/red + ↑ arrows |
+| `Bernstein Composite` | `composite` | Weekly 0–100 normalized line, green/red + ↑ arrows |
 
 ### Input CSV columns (Phase 1)
 
@@ -48,7 +48,7 @@ python bernstein_cli.py user_input/jobs/ndx100_standard_charts.csv --workers 4
 | `ticker` | One of | — | Single ticker, e.g. `SPY` |
 | `ticker_file` | One of | — | Path to ticker list → expands to one job per ticker |
 | `chart_type` | Yes | — | See table above |
-| `start_year` | No | all | First year to include |
+| `start_year` | No | all history | First year to include (blank = max available) |
 | `end_year` | No | latest | Last year to include |
 | `exclude_years` | No | none | Semicolon-separated years to skip, e.g. `2008;2020` |
 | `aggregation` | No | `Simple Average` | `Simple Average` \| `Median` \| `Weighted Average` |
@@ -62,14 +62,62 @@ python bernstein_cli.py user_input/jobs/ndx100_standard_charts.csv --workers 4
 | `show_bands` | No | `false` | Show min/max range band |
 | `show_reliability` | No | `false` | Highlight consecutive high-win-rate runs |
 | `smoothing_period` | No | `1` | Moving average window (1 = off) |
-| `win_rate_arrow_threshold` | No | `65.0` | (Bernstein Composite only) % win rate to draw ↑ arrow |
+| `day_groups` | No | `1-6,7-12,13-18,19-25,26-31` | **Grouping of Days only** — comma-separated day ranges, e.g. `1-10,11-20,21-31` |
+| `quarter_split_day` | No | `15` | **Quarterly Halves only** — day-of-month to split each quarter |
+| `win_rate_arrow_threshold` | No | `65.0` | **Bernstein Composite only** — % win rate to draw ↑ arrow |
 | `output_path` | No | `output/` | Output directory |
+
+### Chart subtitle — what is shown
+
+Every chart shows a subtitle line below the title. It always includes:
+- `hist_yr = N` — number of distinct historical years used in the calculation
+
+When `show_reliability = true` it also includes:
+- `★★★ = Strong (WR≥65%, n≥30)  |  ★★ = Reliable (WR≥59%, n≥20)  |  ★ = Limited  |  Faded bars = low sample size`
+
+### Grouping of Days — configuration
+
+The month is divided into day-range groups. Default is 5 groups:
+
+| Group | Days |
+|---|---|
+| G1 | 1–6 |
+| G2 | 7–12 |
+| G3 | 13–18 |
+| G4 | 19–25 |
+| G5 | 26–31 |
+
+To use different groups, set `day_groups` in the job CSV:
+```csv
+# 3-group classic split
+day_groups = 1-10,11-20,21-31
+
+# 6-group fine split
+day_groups = 1-5,6-10,11-15,16-20,21-25,26-31
+```
+
+### Quarterly Halves — configuration
+
+Each quarter is split into two halves at a configurable day of the middle month.
+Default `quarter_split_day = 15`:
+
+| Period | Range |
+|---|---|
+| Q1 (1st) | Jan 1 – Feb 15 |
+| Q1 (2nd) | Feb 16 – Mar 31 |
+| Q2 (1st) | Apr 1 – May 15 |
+| Q2 (2nd) | May 16 – Jun 30 |
+| Q3 (1st) | Jul 1 – Aug 15 |
+| Q3 (2nd) | Aug 16 – Sep 30 |
+| Q4 (1st) | Oct 1 – Nov 15 |
+| Q4 (2nd) | Nov 16 – Dec 31 |
+
+To shift the split: set `quarter_split_day = 10` (or any day 1–27) in the job CSV.
 
 ### Multi-ticker — how it works
 
 Set `ticker_file` instead of `ticker` in any row. The batch processor reads the file
 and creates **one job per ticker** using the same chart settings from that row.
-Multiple rows = multiple chart types, each expanded to the full ticker list.
 
 ```csv
 # 3 rows × 101 tickers = 303 jobs automatically
@@ -80,8 +128,61 @@ quarterly_cagr,        , tickers/nasdaq100_tickers.csv,  Quarterly Halves,   ...
 ```
 
 ```bash
-python bernstein_cli.py user_input/jobs/ndx100_standard_charts.csv --workers 4
+python seasonality_cli.py user_input/jobs/ndx100_standard_charts.csv --workers 4
 ```
+
+---
+
+## Data Sources
+
+### Ticker file format
+
+Ticker files use a two-column format: `TICKER[,source]`
+
+```
+# Format: TICKER[,source]
+# source: yf | stooq | local  (blank = auto)
+SPY,
+QQQ,
+^DJI,local
+AAPL,yf
+```
+
+| `source` value | Behaviour |
+|---|---|
+| *(blank)* / `auto` | Check `hist_data/` first → fall back to Yahoo Finance |
+| `yf` | Yahoo Finance only |
+| `stooq` | Read from `hist_data/` (Stooq data, manually downloaded — see below) |
+| `local` | `hist_data/` only — hard error if file not found |
+
+### hist_data — long-history local files
+
+For tickers where Yahoo Finance history is insufficient (e.g. DJIA back to 1896),
+place a manually downloaded CSV in:
+
+```
+user_input/tickers/hist_data/{TICKER}.csv
+```
+
+Required columns: `Date, Open, High, Low, Close, Volume` (any case, Date as `YYYY-MM-DD`).
+
+**Example — DJIA full history from Stooq:**
+1. Go to `https://stooq.com/q/d/?s=^dji`, select range **Max**, format **CSV**, download
+2. Save as `user_input/tickers/hist_data/^DJI.csv`
+3. Set ticker file entry to `^DJI,local` (or `^DJI,stooq`)
+
+The filename must match the ticker symbol exactly (`^DJI.csv` for ticker `^DJI`).
+
+### Data source in job CSV
+
+The `data_source` column in job CSV files accepts the same values (`yf`, `stooq`, `local`, `auto`).
+When using `ticker_file`, the **per-ticker source in the ticker file takes precedence**.
+
+### Caching
+
+Yahoo Finance downloads are cached in `data/cache/` for 24 hours.
+Cache filename format: `YFI_{SYMBOL}_{interval}_{start}_{end}.csv`
+Delete files there to force a fresh download.
 
 ---
 
@@ -92,7 +193,7 @@ python bernstein_cli.py user_input/jobs/ndx100_standard_charts.csv --workers 4
 Scans every possible (entry date, exit date) combination within the months you
 select and ranks the windows by how consistently they worked historically.
 Uses **raw daily close prices year-by-year** — completely independent of the
-Bernstein Composite chart.  Each calendar year is one observation per window.
+Bernstein Composite chart. Each calendar year is one observation per window.
 
 ### How to create a job file
 
@@ -139,14 +240,14 @@ output/best_trade/
 | `start_year` | all | First year of historical data to use |
 | `end_year` | today | Last year |
 | `exclude_years` | none | Semicolon-separated years to skip, e.g. `2008;2020` |
-| `entry_months` | all | Months to scan for entry dates. `11;12` = Nov+Dec only. Empty = all 12 months |
+| `entry_months` | all | Months to scan for entry dates. `11;12` = Nov+Dec only |
 | `min_days_in_trade` | `5` | Shortest window allowed (calendar days) |
 | `max_days_in_trade` | `45` | Longest window allowed (calendar days) |
-| `stop_pct` | `9.0` | **Max Adverse Excursion filter** — exclude windows where the worst intra-trade drop exceeded this % |
-| `min_years` | `15` | Minimum number of years with valid data required before reporting a window |
+| `stop_pct` | `9.0` | Max Adverse Excursion filter — exclude windows where intra-trade drop exceeded this % |
+| `min_years` | `15` | Minimum years with valid data required before reporting a window |
 | `win_rate_threshold` | `75.0` | Minimum % of years that must have been profitable |
-| `profit_factor_threshold` | `1.50` | Minimum F/L ratio (gross profit ÷ gross loss) |
-| `max_consec_losses` | `999` | Maximum allowed consecutive losing years (999 = filter off) |
+| `profit_factor_threshold` | `1.50` | Minimum profit factor (gross profit ÷ gross loss) |
+| `max_consec_losses` | `999` | Maximum allowed consecutive losing years (999 = off) |
 | `direction` | `long` | `long` or `short` |
 | `top_n` | `20` | Number of trades shown in the chart |
 | `save_chart` | `true` | Whether to save the PNG chart |
@@ -170,38 +271,27 @@ sym  l_s  entry_date  exit_date  days_in_trade  pct_win  pl_ratio  avg_profit  a
 AA   L    11/21       11/28      7              76.9     20.59     6.39        -1.03     121.58  6.23      1491.07
 ```
 
-| Column | What it means | Example |
-|---|---|---|
-| `sym` | Ticker symbol | `AA` |
-| `l_s` | Long or Short | `L` |
-| `entry_date` | Entry date (MM/DD) — buy at close | `11/21` = Nov 21 |
-| `exit_date` | Exit date (MM/DD) — sell at close | `11/28` = Nov 28 |
-| `entry_doy` | Entry as day-of-year (1–365) | `325` |
-| `exit_doy` | Exit as day-of-year (1–365) | `332` |
-| `days_in_trade` | Window length in calendar days | `7` |
-| `stop_pct` | The MAE filter used in this scan | `9.0` |
-| `pl_ratio` | **Profit Factor** — gross profit ÷ gross loss. 20.6 means for every $1 lost you made $20.60. >1.5 is good, >3 is strong | `20.59` |
-| `pct_win` | **Win Rate %** — how often this window was profitable across all years | `76.9%` |
-| `wins` | Count of profitable years | `20` |
-| `n_years` | Total years with valid data | `26` |
-| `avg_profit` | Average return on winning years (%) | `+6.39%` |
-| `avg_loss` | Average return on losing years (%) | `-1.03%` |
-| `pct_avg_profit` | avg_profit ÷ avg_loss × 100 — how much bigger wins are vs losses | `617.75` |
-| `pct_avg_loss` | avg_loss ÷ avg_profit × 100 — inverse ratio | `16.19` |
-| `max_win` | Best single-year return (%) | `+57.08%` |
-| `max_loss` | Worst single-year return (%) | `-3.58%` |
-| `max_up_swing` | **Max Favourable Excursion** — best intra-trade close vs entry across all years (%) | `52.99%` |
-| `max_stop` | **Max Adverse Excursion** — worst intra-trade close vs entry across all years (%). This is the most you could have been down before exit | `6.23%` |
-| `max_drawdown` | Worst peak-to-trough decline within the window across all years (%) | `6.23%` |
-| `growth` | **Cumulative growth** — sum of all annual returns over the full lookback. The total % return if you traded this window every single year | `121.58%` |
-| `max_consec_losses` | Longest streak of consecutive losing years | `3` |
-| `rank_score` | Internal sort key: `(win_rate × pl_ratio) / (1 + max_stop/100)`. Higher = better | `1491.07` |
-
-**How to read a row:** The top AA result says — buying AA on Nov 21 and selling Nov 28 (a 7-day window) has worked in 20 out of 26 years (76.9%). When it wins, you average +6.4%; when it loses, you average only -1.0%. The worst it ever went against you mid-trade was -6.2%. If you had traded this every year since 2000, your cumulative gain would be +121.6%.
+| Column | What it means |
+|---|---|
+| `sym` | Ticker symbol |
+| `l_s` | Long or Short |
+| `entry_date` | Entry date (MM/DD) — buy at close |
+| `exit_date` | Exit date (MM/DD) — sell at close |
+| `days_in_trade` | Window length in calendar days |
+| `pl_ratio` | **Profit Factor** — gross profit ÷ gross loss. >1.5 good, >3 strong |
+| `pct_win` | **Win Rate %** — how often profitable across all years |
+| `wins` / `n_years` | Profitable years / total years with data |
+| `avg_profit` / `avg_loss` | Average return on winning / losing years |
+| `max_win` / `max_loss` | Best / worst single-year return |
+| `max_up_swing` | Max Favourable Excursion — best intra-trade close vs entry |
+| `max_stop` | **Max Adverse Excursion** — worst intra-trade close vs entry (how far it went against you) |
+| `growth` | **Cumulative growth** — sum of all annual returns over the full lookback |
+| `max_consec_losses` | Longest streak of consecutive losing years |
+| `rank_score` | Sort key: `(win_rate × pl_ratio) / (1 + max_stop/100)` |
 
 ---
 
-### Understanding the bar chart (`aa_bt_top20_chart.png`)
+### Understanding the bar chart
 
 Each bar is one trade window, sorted best-first (top = highest rank score).
 
@@ -210,50 +300,45 @@ Each bar is one trade window, sorted best-first (top = highest rank score).
 - **Label on right** = `PL:<profit_factor>  +<avg_profit>% / <avg_loss>%  growth:<cumulative>%  yrs:<n_years>`
 - **Dashed vertical line** = 75% win rate reference
 
-The best trades appear at the top with long green bars and high PL ratios.
-
 ---
 
 ## Directory Layout
 
 ```
-seasonality_Bernstein/
-├── bernstein_cli.py          ← Phase 1 entry point
-├── best_trade_cli.py         ← Phase 2 entry point
+seasonality_lab/
+├── seasonality_cli.py            ← Phase 1 entry point
+├── best_trade_cli.py             ← Phase 2 entry point
 ├── requirements.txt
 ├── README.md
 │
 ├── user_input/
-│   ├── jobs/                 ← CSVs you actually run
-│   │   ├── recreate_nvda_old.csv
-│   │   ├── ndx100_standard_charts.csv
-│   │   ├── best_trade_spy.csv
-│   │   └── best_trade_ndx100.csv
-│   ├── templates/            ← Copy & edit to create your own jobs
-│   │   ├── BLANK.csv         ← All columns, no data rows
-│   │   └── EXAMPLES.csv      ← One example per chart type
-│   ├── tickers/              ← Ticker list files
-│   │   ├── nasdaq100_tickers.csv
-│   │   ├── sp500_tickers.csv
-│   │   ├── russell3000_tickers.csv
-│   │   └── iwm1000_tickers.csv
-│   └── archive/              ← Old cycles-dashboard format files (not compatible)
+│   ├── jobs/                     ← CSVs you actually run
+│   ├── templates/                ← Copy & edit to create your own jobs
+│   │   ├── BLANK.csv             ← All columns, no data rows
+│   │   └── EXAMPLES.csv          ← One example per chart type
+│   └── tickers/                  ← Ticker list files
+│       ├── nasdaq100_tickers.csv
+│       ├── sp500_tickers.csv
+│       ├── russell3000_tickers.csv
+│       ├── iwm1000_tickers.csv
+│       └── hist_data/            ← Manually saved long-history CSVs
+│           └── ^DJI.csv          ← DJIA from 1896 (downloaded from Stooq)
 │
-├── output/                   ← Generated charts and CSVs (auto-created)
-│   └── old/                  ← Reference NVDA charts from previous run
+├── output/                       ← Generated charts and CSVs (auto-created)
 │
 ├── src/
-│   ├── data/data_loader.py   ← yfinance + CSV loading (cached 24h)
+│   ├── data/data_loader.py       ← YF + Stooq (local) + hist_data loading (cached 24h)
 │   └── core/
-│       ├── stamper.py           ← Adds temporal columns to price data
-│       ├── bernstein_config.py  ← Config dataclass + CSV parser
-│       ├── bernstein_result.py  ← Result container (matplotlib only)
-│       ├── engine.py            ← Job router (Phase 1)
-│       ├── batch.py             ← Sequential/parallel batch runner
-│       ├── bernstein_chart.py   ← Bernstein weekly composite chart
-│       └── best_trade.py        ← Best Trade DOY scanner + chart
+│       ├── stamper.py            ← Adds temporal columns to price data
+│       ├── bernstein_config.py   ← Config dataclass + CSV parser
+│       ├── bernstein_result.py   ← Result container
+│       ├── engine.py             ← Job router (Phase 1)
+│       ├── batch.py              ← Sequential/parallel batch runner
+│       ├── bernstein_chart.py    ← Bernstein weekly composite chart
+│       ├── legacy_charts.py      ← All other chart types
+│       └── best_trade.py         ← Best Trade DOY scanner + chart
 │
-└── data/cache/               ← yfinance cache (auto-created, 24h TTL)
+└── data/cache/                   ← Download cache (auto-created, 24h TTL)
 ```
 
 ---
@@ -266,10 +351,3 @@ seasonality_Bernstein/
 | `_ar` | Average Return + **R**eliability (`show_reliability=true`) |
 | `_cagr` | Y-axis = Annualized CAGR |
 | `_wr` | Y-axis = **W**in **R**ate |
-
----
-
-## Caching
-
-Yahoo Finance data is cached in `data/cache/` for 24 hours.
-Delete files there to force a fresh download.

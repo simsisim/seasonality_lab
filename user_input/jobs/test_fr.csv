@@ -1,18 +1,11 @@
-# AA (Alcoa) — all chart types: legacy variants + Bernstein composite,,,,,,,,,,,,,,,,
-#,,,,,,,,,,,,,,,,
-# Run:,,,,,,,,,,,,,,,,
-#   python bernstein_cli.py user_input/jobs/aa_all_charts.csv,,,,,,,,,,,,,,,,
-#,,,,,,,,,,,,,,,,
-job_id,ticker,ticker_file,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,win_rate_arrow_threshold,output_path,notes
-aa_calendar_day_ab,,../tickers/test.csv,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,,output/aa/,Calendar day avg+bands
-aa_calendar_day_ar,,../tickers/test.csv,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,false,true,1,,output/aa/,Calendar day reliability
-aa_calendar_day_cagr,,../tickers/test.csv,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Annualized (CAGR),false,false,1,,output/aa/,Calendar day CAGR
-aa_grouping_of_days_ab,,../tickers/test.csv,Grouping of Days,2000,,Simple Average,Returns,None,average_daily,Average Return,true,false,1,,output/aa/,Grouping avg+bands
-aa_grouping_of_days_ar,,../tickers/test.csv,Grouping of Days,2000,,Simple Average,Returns,None,average_daily,Average Return,false,true,1,,output/aa/,Grouping reliability
-aa_grouping_of_days_cagr,,../tickers/test.csv,Grouping of Days,2000,,Simple Average,Returns,None,average_daily,Annualized (CAGR),false,false,1,,output/aa/,Grouping CAGR
-aa_monthly_wr,,../tickers/test.csv,Monthly (Jan-Dec),2000,,Simple Average,Returns,None,open_close_month,Win Rate,false,false,1,,output/aa/,Monthly win rate
-aa_quarterly_ab,,../tickers/test.csv,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Average Return,true,false,1,,output/aa/,Quarterly avg+bands
-aa_quarterly_ar,,../tickers/test.csv,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Average Return,false,true,1,,output/aa/,Quarterly reliability
-aa_quarterly_cagr,,../tickers/test.csv,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Annualized (CAGR),false,false,1,,output/aa/,Quarterly CAGR
-aa_bernstein,,../tickers/test.csv,Bernstein Composite,2000,,,,,,,,,,65,output/aa/,Bernstein weekly composite
-aa_calendar_day_bowley,,../tickers/test.csv,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Annualized (Bowley 252x),false,true,1,,output/aa/,Calendar day reliability
+#INDEXES — all chart types: legacy variants + Bernstein composite,,,,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,,,,
+# Run:,,,,,,,,,,,,,,,,,,
+#   python seasonality_cli.py user_input/jobs/aa_all_charts.csv,,,,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,,,,
+job_id,ticker,ticker_file,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,day_groups,quarter_split_day,win_rate_arrow_threshold,output_path,notes
+calendar_day_bowley,,../tickers/test.csv,Calendar Day (1-31),1950,2025,Simple Average,Returns,Majority Rule,average_daily,Annualized (Bowley 252x),false,true,1,,,,output/indexes/,Calendar day avg+bands
+grouping_of_days_bowley,,../tickers/test.csv,Grouping of Days,1950,2025,Simple Average,Returns,None,average_daily,Annualized (Bowley 252x),false,true,1,,,,output/indexes/,Grouping avg+bands (default 5 groups)
+monthly_bowley,,../tickers/test.csv,Monthly (Jan-Dec),1950,2025,Simple Average,Returns,None,open_close_month,Annualized (Bowley 252x),false,true,1,,,,output/indexes/,Monthly win rate
+quarterly_bowley,,../tickers/test.csv,Quarterly Halves,1950,2025,Simple Average,Returns,None,open_close_period,Annualized (Bowley 252x),false,true,1,,15,,output/indexes/,Quarterly avg+bands
+bernstein,,../tickers/test.csv,Bernstein Composite,1950,2025,,,,,,,,,,,65,output/indexes/,Bernstein weekly composite

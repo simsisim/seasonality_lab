@@ -5,7 +5,7 @@
 # job_id is suffixed with the ticker symbol: monthly_ndx_AAPL, monthly_ndx_MSFT, etc.
 #
 # Run with:
-#   python bernstein_cli.py user_input/multi_ticker_monthly.csv --workers 4
+#   python seasonality_cli.py user_input/multi_ticker_monthly.csv --workers 4
 #
 job_id,ticker,ticker_file,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,output_path,notes
 monthly_ndx,,tickers/nasdaq100_tickers.csv,Monthly (Jan-Dec),2000,,Simple Average,Returns,None,open_close_month,Average Return,true,false,1,output/ndx100_monthly/,Monthly seasonality for all NDX100

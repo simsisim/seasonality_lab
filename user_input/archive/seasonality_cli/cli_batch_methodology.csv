@@ -1,8 +1,0 @@
-job_id,ticker,data_source,interval,start_year,end_year,chart_type,aggregation,data_type,use_log_returns,normalization,detrend_enabled,detrend_method,smoothing_period,alignment,logic_calc,y_axis_metric,output_format,output_path,notes
-spy_raw,SPY,yahoo,1d,2000,2026,Monthly (Jan-Dec),Simple Average,Returns,false,None,false,,1,None,open_close_month,Average Return,png,output/methodology/,SPY monthly - raw returns no processing
-spy_log_returns,SPY,yahoo,1d,2000,2026,Monthly (Jan-Dec),Simple Average,Returns,true,None,false,,1,None,open_close_month,Average Return,png,output/methodology/,SPY monthly - log returns
-spy_normalized,SPY,yahoo,1d,2000,2026,Monthly (Jan-Dec),Simple Average,Returns,false,Z-Score,false,,1,None,open_close_month,Average Return,png,output/methodology/,SPY monthly - z-score normalized
-spy_detrended,SPY,yahoo,1d,2000,2026,Monthly (Jan-Dec),Simple Average,Returns,false,None,true,Linear,1,None,open_close_month,Average Return,png,output/methodology/,SPY monthly - linear detrending
-spy_smoothed,SPY,yahoo,1d,2000,2026,Monthly (Jan-Dec),Simple Average,Returns,false,None,false,,5,None,open_close_month,Average Return,png,output/methodology/,SPY monthly - 5-period smoothing
-spy_median,SPY,yahoo,1d,2000,2026,Monthly (Jan-Dec),Median,Returns,false,None,false,,1,None,open_close_month,Average Return,png,output/methodology/,SPY monthly - median aggregation
-spy_weighted,SPY,yahoo,1d,2000,2026,Monthly (Jan-Dec),Weighted Average,Returns,false,None,false,,1,None,open_close_month,Average Return,png,output/methodology/,SPY monthly - weighted average
