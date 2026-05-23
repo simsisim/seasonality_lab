@@ -1,0 +1,65 @@
+name: Seasonality Charts
+
+on:
+  workflow_dispatch:
+    inputs:
+      nasdaq100:
+        description: 'NASDAQ-100 (101 tickers)'
+        type: boolean
+        default: false
+      sp500:
+        description: 'S&P 500 (503 tickers)'
+        type: boolean
+        default: false
+      iwm1000:
+        description: 'IWM 1000 (1008 tickers)'
+        type: boolean
+        default: false
+      russell3000:
+        description: 'Russell 3000 (2586 tickers)'
+        type: boolean
+        default: false
+      workers:
+        description: 'Parallel workers (4–8 recommended)'
+        type: string
+        default: '4'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run NASDAQ-100
+        if: ${{ inputs.nasdaq100 }}
+        run: python seasonality_cli.py user_input/jobs/ndx100_standard_charts.csv --workers ${{ inputs.workers }}
+
+      - name: Run S&P 500
+        if: ${{ inputs.sp500 }}
+        run: python seasonality_cli.py user_input/jobs/sp500_standard_charts.csv --workers ${{ inputs.workers }}
+
+      - name: Run IWM 1000
+        if: ${{ inputs.iwm1000 }}
+        run: python seasonality_cli.py user_input/jobs/iwm1000_standard_charts.csv --workers ${{ inputs.workers }}
+
+      - name: Run Russell 3000
+        if: ${{ inputs.russell3000 }}
+        run: python seasonality_cli.py user_input/jobs/russell3000_standard_charts.csv --workers ${{ inputs.workers }}
+
+      - name: Upload charts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seasonality-charts-${{ github.run_number }}
+          path: output/
+          retention-days: 30

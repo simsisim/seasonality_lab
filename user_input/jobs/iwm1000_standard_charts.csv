@@ -1,0 +1,13 @@
+# Standard chart set for IWM 1000 tickers.
+#
+# Each row = one chart type.
+# ticker_file expands each row into ~1008 jobs automatically.
+# Total: 3 rows × 1008 tickers = 3024 jobs.
+#
+# Run:
+#   python seasonality_cli.py user_input/jobs/iwm1000_standard_charts.csv --workers 4
+#
+job_id,ticker,ticker_file,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,output_path,notes
+iwm1000_monthly_wr,,tickers/iwm1000_tickers.csv,Monthly (Jan-Dec),2000,,Simple Average,Returns,None,open_close_month,Win Rate,false,false,1,output/iwm1000/,Monthly win rate
+iwm1000_calendar_ab,,tickers/iwm1000_tickers.csv,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,output/iwm1000/,Calendar day avg+bands
+iwm1000_quarterly_cagr,,tickers/iwm1000_tickers.csv,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Annualized (CAGR),false,false,1,output/iwm1000/,Quarterly CAGR

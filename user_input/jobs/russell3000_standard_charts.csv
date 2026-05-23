@@ -1,0 +1,13 @@
+# Standard chart set for Russell 3000 tickers.
+#
+# Each row = one chart type.
+# ticker_file expands each row into ~2586 jobs automatically.
+# Total: 3 rows × 2586 tickers = 7758 jobs.
+#
+# Run:
+#   python seasonality_cli.py user_input/jobs/russell3000_standard_charts.csv --workers 4
+#
+job_id,ticker,ticker_file,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,output_path,notes
+russell3000_monthly_wr,,tickers/russell3000_tickers.csv,Monthly (Jan-Dec),2000,,Simple Average,Returns,None,open_close_month,Win Rate,false,false,1,output/russell3000/,Monthly win rate
+russell3000_calendar_ab,,tickers/russell3000_tickers.csv,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,output/russell3000/,Calendar day avg+bands
+russell3000_quarterly_cagr,,tickers/russell3000_tickers.csv,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Annualized (CAGR),false,false,1,output/russell3000/,Quarterly CAGR
