@@ -46,42 +46,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Debug pipeline
-        run: |
-          python - <<'EOF'
-          import pandas as pd, yfinance as yf, sys
-          print("pandas:", pd.__version__, "| yfinance:", yf.__version__)
-
-          # Step 1: download
-          t = yf.Ticker("AAPL")
-          raw = t.history(start="2000-01-01", interval="1d")
-          print("raw rows:", len(raw), "| columns:", list(raw.columns))
-          print("raw close sample:", raw["Close"].head(3).tolist())
-
-          # Step 2: standardize (same as DataLoader._standardize_dataframe)
-          import numpy as np
-          df = raw.copy()
-          df.columns = df.columns.str.lower().str.strip()
-          df["timestamp"] = df.index.astype(np.int64) // 10**9
-          df = df[["timestamp","open","high","low","close","volume"]].copy()
-          df = df.reset_index(drop=True)
-          print("std close sample:", df["close"].head(3).tolist())
-
-          # Step 3: stamp
-          sys.path.insert(0, ".")
-          from src.core.stamper import stamp_data
-          df2 = stamp_data(df)
-          print("stamp rows:", len(df2), "| day sample:", df2["day"].head(5).tolist())
-          print("close after stamp:", df2["close"].head(3).tolist())
-
-          # Step 4: pct_change
-          df2["daily_return"] = df2["close"].pct_change() * 100.0
-          df2 = df2.dropna(subset=["daily_return"])
-          print("after pct_change rows:", len(df2))
-          day1 = df2[df2["day"] == 1]
-          print("day==1 count:", len(day1), "| sample:", day1["daily_return"].head(3).tolist())
-          EOF
-
       - name: Run Test (5 tickers)
         if: ${{ inputs.test }}
         run: python seasonality_cli.py user_input/jobs/test_standard_charts.csv --workers ${{ inputs.workers }}

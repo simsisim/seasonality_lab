@@ -266,7 +266,11 @@ class DataLoader:
                 break
 
         if isinstance(df.index, pd.DatetimeIndex):
-            df["timestamp"] = df.index.astype(np.int64) // 10**9
+            # pandas 3.0: DatetimeIndex may use second resolution internally,
+            # so astype(np.int64) returns seconds, not nanoseconds.
+            # Normalise via datetime64[s] to get Unix seconds reliably.
+            utc_idx = df.index.tz_convert("UTC") if df.index.tz else df.index
+            df["timestamp"] = utc_idx.astype("datetime64[s]").astype(np.int64)
         elif time_col:
             if df[time_col].dtype in [np.int64, np.int32, np.float64]:
                 min_val, max_val = df[time_col].min(), df[time_col].max()
