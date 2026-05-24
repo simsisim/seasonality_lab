@@ -38,9 +38,12 @@ class BernsteinResult:
         out.mkdir(parents=True, exist_ok=True)
 
         if self.figure is not None:
+            import matplotlib.pyplot as plt
             png_path = out / f"{self.job_id}_chart.png"
             self.figure.savefig(str(png_path), dpi=FIGURE_DPI, bbox_inches="tight")
             saved.append(str(png_path))
+            plt.close(self.figure)
+            self.figure = None
 
         for name, df in self.tables.items():
             csv_path = out / f"{self.job_id}_{name}.csv"
