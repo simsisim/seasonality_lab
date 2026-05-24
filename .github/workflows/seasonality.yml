@@ -42,9 +42,33 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Debug data download
+        run: |
+          python - <<'EOF'
+          import yfinance as yf, sys
+          print("yfinance version:", yf.__version__)
+          t = yf.Ticker("AAPL")
+          df = t.history(start="2000-01-01", interval="1d")
+          print("AAPL rows:", len(df))
+          print("Columns:", list(df.columns))
+          if df.empty:
+              print("ERROR: AAPL data is EMPTY")
+              sys.exit(1)
+          else:
+              print("OK - first row:", df.index[0], df["Close"].iloc[0])
+          EOF
+
       - name: Run NASDAQ-100
         if: ${{ inputs.nasdaq100 }}
         run: python seasonality_cli.py user_input/jobs/ndx100_standard_charts.csv --workers ${{ inputs.workers }}
+
+      - name: Debug AAPL output
+        if: ${{ inputs.nasdaq100 }}
+        run: |
+          echo "=== AAPL calendar stats ==="
+          cat output/ndx100/ndx_calendar_ab_AAPL_stats.csv || echo "FILE NOT FOUND"
+          echo "=== AAPL monthly stats ==="
+          head -3 output/ndx100/ndx_monthly_wr_AAPL_stats.csv || echo "FILE NOT FOUND"
 
       - name: Run S&P 500
         if: ${{ inputs.sp500 }}
