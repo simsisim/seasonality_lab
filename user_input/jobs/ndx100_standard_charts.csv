@@ -1,13 +1,13 @@
-# Standard chart set for all Nasdaq-100 tickers.
-#
-# Each row = one chart type (the "model").
-# ticker_file expands each row into 101 jobs automatically.
-# Total: 3 rows × 101 tickers = 303 jobs.
-#
-# Run:
-#   python seasonality_cli.py user_input/jobs/ndx100_standard_charts.csv --workers 4
-#
+# Standard chart set for all Nasdaq-100 tickers.,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
+"# Each row = one chart type (the ""model"").",,,,,,,,,,,,,,,
+# ticker_file expands each row into 101 jobs automatically.,,,,,,,,,,,,,,,
+# Total: 3 rows × 101 tickers = 303 jobs.,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
+# Run:,,,,,,,,,,,,,,,
+#   python seasonality_cli.py user_input/jobs/ndx100_standard_charts.csv --workers 4,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
 job_id,ticker,ticker_file,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,output_path,notes
-ndx_monthly_wr,,../tickers/nasdaq100_tickers.csv,Monthly (Jan-Dec),2000,,Simple Average,Returns,None,open_close_month,Win Rate,false,false,1,output/ndx100/,Monthly win rate
-ndx_calendar_ab,,../tickers/nasdaq100_tickers.csv,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,output/ndx100/,Calendar day avg+bands
-ndx_quarterly_cagr,,../tickers/nasdaq100_tickers.csv,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Annualized (CAGR),false,false,1,output/ndx100/,Quarterly CAGR
+ndx_monthly_wr,,../tickers/nasdaq100_tickers.csv,Monthly (Jan-Dec),2013,,Simple Average,Returns,None,open_close_month,Win Rate,false,false,1,output/ndx100/,Monthly win rate
+ndx_calendar_ab,,../tickers/nasdaq100_tickers.csv,Calendar Day (1-31),2013,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,output/ndx100/,Calendar day avg+bands
+ndx_quarterly_cagr,,../tickers/nasdaq100_tickers.csv,Quarterly Halves,2013,,Simple Average,Returns,None,open_close_period,Annualized (CAGR),false,false,1,output/ndx100/,Quarterly CAGR

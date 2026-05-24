@@ -1,13 +1,13 @@
-# Standard chart set for all S&P 500 tickers.
-#
-# Each row = one chart type.
-# ticker_file expands each row into 503 jobs automatically.
-# Total: 3 rows × 503 tickers = 1509 jobs.
-#
-# Run:
-#   python seasonality_cli.py user_input/jobs/sp500_standard_charts.csv --workers 4
-#
+# Standard chart set for all S&P 500 tickers.,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
+# Each row = one chart type.,,,,,,,,,,,,,,,
+# ticker_file expands each row into 503 jobs automatically.,,,,,,,,,,,,,,,
+# Total: 3 rows × 503 tickers = 1509 jobs.,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
+# Run:,,,,,,,,,,,,,,,
+#   python seasonality_cli.py user_input/jobs/sp500_standard_charts.csv --workers 4,,,,,,,,,,,,,,,
+#,,,,,,,,,,,,,,,
 job_id,ticker,ticker_file,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,output_path,notes
-sp500_monthly_wr,,../tickers/sp500_tickers.csv,Monthly (Jan-Dec),2000,,Simple Average,Returns,None,open_close_month,Win Rate,false,false,1,output/sp500/,Monthly win rate
-sp500_calendar_ab,,../tickers/sp500_tickers.csv,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,output/sp500/,Calendar day avg+bands
-sp500_quarterly_cagr,,../tickers/sp500_tickers.csv,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Annualized (CAGR),false,false,1,output/sp500/,Quarterly CAGR
+sp500_monthly_wr,,../tickers/sp500_tickers.csv,Monthly (Jan-Dec),2013,,Simple Average,Returns,None,open_close_month,Win Rate,false,false,1,output/sp500/,Monthly win rate
+sp500_calendar_ab,,../tickers/sp500_tickers.csv,Calendar Day (1-31),2013,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,output/sp500/,Calendar day avg+bands
+sp500_quarterly_cagr,,../tickers/sp500_tickers.csv,Quarterly Halves,2013,,Simple Average,Returns,None,open_close_period,Annualized (CAGR),false,false,1,output/sp500/,Quarterly CAGR
