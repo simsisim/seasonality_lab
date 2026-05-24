@@ -1,0 +1,9 @@
+# Quick test — 5 tickers only. Use this to verify the pipeline works before running full lists.
+#
+# Run:
+#   python seasonality_cli.py user_input/jobs/test_standard_charts.csv --workers 1
+#
+job_id,ticker,ticker_file,chart_type,start_year,end_year,aggregation,data_type,alignment,logic_calc,y_axis_metric,show_bands,show_reliability,smoothing_period,output_path,notes
+test_monthly_wr,,../tickers/test.csv,Monthly (Jan-Dec),2000,,Simple Average,Returns,None,open_close_month,Win Rate,false,false,1,output/test/,Monthly win rate
+test_calendar_ab,,../tickers/test.csv,Calendar Day (1-31),2000,,Simple Average,Returns,Majority Rule,average_daily,Average Return,true,false,1,output/test/,Calendar day avg+bands
+test_quarterly_cagr,,../tickers/test.csv,Quarterly Halves,2000,,Simple Average,Returns,None,open_close_period,Annualized (CAGR),false,false,1,output/test/,Quarterly CAGR

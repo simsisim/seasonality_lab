@@ -3,6 +3,10 @@ name: Seasonality Charts
 on:
   workflow_dispatch:
     inputs:
+      test:
+        description: 'Test (5 tickers — run this first to verify the pipeline)'
+        type: boolean
+        default: false
       nasdaq100:
         description: 'NASDAQ-100 (101 tickers)'
         type: boolean
@@ -77,6 +81,10 @@ jobs:
           day1 = df2[df2["day"] == 1]
           print("day==1 count:", len(day1), "| sample:", day1["daily_return"].head(3).tolist())
           EOF
+
+      - name: Run Test (5 tickers)
+        if: ${{ inputs.test }}
+        run: python seasonality_cli.py user_input/jobs/test_standard_charts.csv --workers ${{ inputs.workers }}
 
       - name: Run NASDAQ-100
         if: ${{ inputs.nasdaq100 }}
