@@ -292,7 +292,7 @@ def load_batch_csv(csv_path: str) -> list[BernsteinJobConfig]:
     configs: list[BernsteinJobConfig] = []
 
     with open(path, newline="", encoding="utf-8") as f:
-        lines = [l for l in f if not l.strip().startswith("#") and l.strip()]
+        lines = [l for l in f if not l.strip().lstrip('"').startswith("#") and l.strip()]
 
     reader = csv.DictReader(lines)
 

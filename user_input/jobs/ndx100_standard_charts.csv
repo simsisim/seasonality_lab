@@ -1,6 +1,6 @@
 # Standard chart set for all Nasdaq-100 tickers.,,,,,,,,,,,,,,,
 #,,,,,,,,,,,,,,,
-"# Each row = one chart type (the ""model"").",,,,,,,,,,,,,,,
+# Each row = one chart type (the model).,,,,,,,,,,,,,,,
 # ticker_file expands each row into 101 jobs automatically.,,,,,,,,,,,,,,,
 # Total: 3 rows × 101 tickers = 303 jobs.,,,,,,,,,,,,,,,
 #,,,,,,,,,,,,,,,
