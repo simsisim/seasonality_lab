@@ -119,11 +119,17 @@ def calculate_stats(group_data: pd.DataFrame, value_col: str = 'daily_return') -
         yr_span = float(len(values)) / 12.0
 
     if yr_span > 0 and compound > 0:
-        annualized = (compound ** (1.0 / yr_span) - 1.0) * 100.0
+        try:
+            annualized = (compound ** (1.0 / yr_span) - 1.0) * 100.0
+        except OverflowError:
+            annualized = float("nan")
     else:
         annualized = 0.0
 
-    compound_252 = ((1.0 + mean_val / 100.0) ** 252 - 1.0) * 100.0 if mean_val != 0 else 0.0
+    try:
+        compound_252 = ((1.0 + mean_val / 100.0) ** 252 - 1.0) * 100.0 if mean_val != 0 else 0.0
+    except OverflowError:
+        compound_252 = float("nan")
     bowley       = mean_val * 253.0
 
     return {
