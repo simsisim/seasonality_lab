@@ -87,7 +87,7 @@ def _daily_returns(df: pd.DataFrame) -> pd.DataFrame:
     """Add daily_return column from close pct_change (%)."""
     df = df.copy()
     df['daily_return'] = df['close'].pct_change() * 100.0
-    return df.dropna(subset=['daily_return'])
+    return df[np.isfinite(df['daily_return'])]
 
 
 def calculate_stats(group_data: pd.DataFrame, value_col: str = 'daily_return') -> Dict:
@@ -118,17 +118,21 @@ def calculate_stats(group_data: pd.DataFrame, value_col: str = 'daily_return') -
     else:
         yr_span = float(len(values)) / 12.0
 
-    if yr_span > 0 and compound > 0:
+    if yr_span > 0 and compound > 0 and np.isfinite(compound):
         try:
             annualized = (compound ** (1.0 / yr_span) - 1.0) * 100.0
-        except OverflowError:
+            if not np.isfinite(annualized):
+                annualized = float("nan")
+        except (OverflowError, ValueError):
             annualized = float("nan")
     else:
         annualized = 0.0
 
     try:
         compound_252 = ((1.0 + mean_val / 100.0) ** 252 - 1.0) * 100.0 if mean_val != 0 else 0.0
-    except OverflowError:
+        if not np.isfinite(compound_252):
+            compound_252 = float("nan")
+    except (OverflowError, ValueError):
         compound_252 = float("nan")
     bowley       = mean_val * 253.0
 
@@ -367,7 +371,7 @@ def _apply_layout_mpl(fig: mpl_figure.Figure, ax: plt.Axes,
 
 def _add_average_line_mpl(ax: plt.Axes, y_values: List) -> None:
     """Dotted black average line + right-aligned annotation."""
-    clean = [float(v) for v in y_values if v is not None and not np.isnan(float(v))]
+    clean = [float(v) for v in y_values if v is not None and np.isfinite(float(v))]
     if not clean:
         return
     avg = float(np.mean(clean))
@@ -385,7 +389,7 @@ def _add_bar_value_labels(ax: plt.Axes, x_pos: np.ndarray,
     """Value labels just above (positive) or below (negative) the bar edge."""
     pad = max(y_range * 0.015, 1e-6)
     for i, (xp, yv, label) in enumerate(zip(x_pos, y_values, top_labels)):
-        if not label or np.isnan(float(yv)):
+        if not label or not np.isfinite(float(yv)):
             continue
         # Place at bar edge only — do not offset by error bar size
         if float(yv) >= 0:
@@ -448,13 +452,14 @@ def _draw_bar_chart(
     n_bars  = len(x_values)
 
     # ── Y range for layout ────────────────────────────────────────────────────
-    y_vals_clean = [float(v) for v in y_values if not np.isnan(float(v))]
+    y_vals_clean = [float(v) for v in y_values if np.isfinite(float(v))]
     y_max_v = max(y_vals_clean) if y_vals_clean else 1.0
     y_min_v = min(y_vals_clean) if y_vals_clean else 0.0
     y_range = max(abs(y_max_v - y_min_v), 1e-6)
 
     # Extra vertical space: top for labels+error bars, bottom for win-rate labels
-    max_eb  = max(std_bands) if (config.show_bands and any(v > 0 for v in std_bands)) else 0.0
+    clean_eb = [float(v) for v in std_bands if np.isfinite(float(v))]
+    max_eb   = max(clean_eb) if (config.show_bands and any(v > 0 for v in clean_eb)) else 0.0
     y_top   = y_max_v + max_eb + y_range * 0.20
     y_bot   = min(y_min_v, 0.0) - y_range * 0.18   # room for win-rate labels
     label_y = min(y_min_v, 0.0) - y_range * 0.07   # y position of win-rate text
@@ -463,8 +468,8 @@ def _draw_bar_chart(
     fig, ax = plt.subplots(figsize=FIGURE_FIGSIZE)
 
     # ── Bars ──────────────────────────────────────────────────────────────────
-    yerr = ([float(v) for v in std_bands]
-            if config.show_bands and any(v > 0 for v in std_bands) else None)
+    yerr = ([float(v) if np.isfinite(float(v)) else 0.0 for v in std_bands]
+            if config.show_bands and any(v > 0 for v in clean_eb) else None)
     ax.bar(
         x_pos, y_values,
         color=colors,
