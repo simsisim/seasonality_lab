@@ -23,10 +23,10 @@ on:
         description: 'Russell 3000 (2586 tickers)'
         type: boolean
         default: false
-      custom_watchlist:
-        description: 'Custom watchlist (user_input/tickers/Ioa_port.txt — auto-converted from TradingView export)'
-        type: boolean
-        default: false
+      watchlist_file:
+        description: 'Custom watchlist — filename inside user_input/tickers/ e.g. Ioa_port.txt or buy_listJuly26.txt (leave blank to skip)'
+        type: string
+        default: ''
       workers:
         description: 'Parallel workers (use 1 to avoid yfinance rate limits; 4+ only if you have a local cache)'
         type: string
@@ -71,12 +71,12 @@ jobs:
         run: python seasonality_cli.py user_input/jobs/russell3000_standard_charts.csv --workers ${{ inputs.workers }}
 
       - name: Convert TradingView watchlist
-        if: ${{ inputs.custom_watchlist }}
-        run: python tv_convert.py user_input/tickers/Ioa_port.txt
+        if: ${{ inputs.watchlist_file != '' }}
+        run: python tv_convert.py user_input/tickers/${{ inputs.watchlist_file }} -o user_input/tickers/_watchlist.csv
 
       - name: Run Custom Watchlist
-        if: ${{ inputs.custom_watchlist }}
-        run: python seasonality_cli.py user_input/jobs/ioa_port_standard_charts.csv --workers ${{ inputs.workers }}
+        if: ${{ inputs.watchlist_file != '' }}
+        run: python seasonality_cli.py user_input/jobs/custom_watchlist_charts.csv --workers ${{ inputs.workers }}
 
       - name: Upload charts
         if: always()
